@@ -1,0 +1,8 @@
+装饰器：
+
+refer to:
+    https://www.jb51.net/article/158814.htm
+    https://www.cnblogs.com/robert-zhou/p/9985479.html
+
+1、返回的是一个函数
+2、两个装饰器的执行顺序
