@@ -1,4 +1,5 @@
-refer to: https://www.cnblogs.com/bsjl/p/7693029.html
+refer to: 
+https://www.cnblogs.com/bsjl/p/7693029.html
 
 1、进程和线程的区别：
    线程是进程内的一个执行单元，也是进程的可调度实体。
