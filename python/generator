@@ -1,0 +1,66 @@
+refer to: https://www.cnblogs.com/jessonluo/p/4732565.html
+
+生成器表达式：
+通列表解析语法，只不过把列表解析的[]换成()
+
+生成器函数：
+在函数中如果出现了yield关键字，那么该函数就不再是普通函数，而是生成器函数
+
+yield和return：
+在一个生成器中，如果没有return，则默认执行到函数完毕时返回StopIteration；
+如果遇到return,如果在执行过程中 return，则直接抛出 StopIteration 终止迭代。
+如果在return后返回一个值，那么这个值为StopIteration异常的说明，不是程序的返回值。
+
+生成器支持的方法：
+close()
+手动关闭生成器函数，后面的调用会直接返回StopIteration异常。
+
+send()
+生成器函数最大的特点是可以接受外部传入的一个变量，并根据变量内容计算结果后返回。
+def gen():
+    value=0
+    while True:
+        receive=yield value
+        if receive=='e':
+            break
+        value = 'got: %s' % receive
+
+g=gen()
+print(g.send(None))     
+print(g.send('aaa'))
+print(g.send(3))
+print(g.send('e'))
+执行流程：
+1、通过g.send(None)或者next(g)可以启动生成器函数，并执行到第一个yield语句结束的位置。
+此时，执行完了yield语句，但是没有给receive赋值。
+yield value会输出初始值0
+注意：在启动生成器函数时只能send(None),如果试图输入其它的值都会得到错误提示信息。
+2、通过g.send('aaa')，会传入aaa，并赋值给receive，然后计算出value的值，并回到while头部，执行yield value语句有停止。
+此时yield value会输出"got: aaa"，然后挂起。
+3、通过g.send(3)，会重复第2步，最后输出结果为"got: 3"
+当我们g.send('e')时，程序会执行break然后推出循环，最后整个函数执行完毕，所以会得到StopIteration异常。
+最后的执行结果如下：
+0
+got: aaa
+got: 3
+Traceback (most recent call last):
+File "h.py", line 14, in <module>
+  print(g.send('e'))
+StopIteration
+
+throw()
+用来向生成器函数送入一个异常，可以结束系统定义的异常，或者自定义的异常。
+throw()后直接跑出异常并结束程序，或者消耗掉一个yield，或者在没有下一个yield的时候直接进行到程序的结尾。
+
+yield from：
+
+
+总结：
+1、按照鸭子模型理论，生成器就是一种迭代器，可以使用for进行迭代。
+2、第一次执行next(generator)时，会执行完yield语句后程序进行挂起，所有的参数和状态会进行保存。
+3、再一次执行next(generator)时，会从挂起的状态开始往后执行。
+4、在遇到程序的结尾或者遇到StopIteration时，循环结束。
+5、可以通过generator.send(arg)来传入参数，这是协程模型。
+6、可以通过generator.throw(exception)来传入一个异常。throw语句会消耗掉一个yield。
+7、可以通过generator.close()来手动关闭生成器。
+8、next()等价于send(None)
